@@ -8,7 +8,7 @@ const productomodel = mongoose.Schema({
         required: true
     },
     precio:{
-        type: Number,
+        type: String,
         required: true
     },
     plataforma:{
