@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const productomodel = require("../models/producto")
+const productomodel = require("../models/producto");
+const producto = require("../models/producto");
 
 
 /**
@@ -28,6 +29,26 @@ const productomodel = require("../models/producto")
  */
 
 
+
+
+/**
+ * @swagger
+ *  /api/producto:
+ *  get:
+ *      summary: Buscar productos
+ *      tags: [Producto]
+ *      responses:
+ *          200:
+ *              description: todos los productos
+ *              content: 
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items:
+ *                              $ref: '#/components/schemas/producto'
+ */
+
+
 //total de productos
 router.get("/producto", (req,res) => {
     productomodel.find()
@@ -37,15 +58,42 @@ router.get("/producto", (req,res) => {
 
 
 
+
 //listado de productos por codigo
+
+/**
+ * @swagger
+ * /api/producto/{id}:
+ *  get:
+ *      summary: Buscar productos
+ *      tags: [Producto]
+ *      parameters:
+ *          -in: path
+ *          name: id
+ *          schema:
+ *              type: string
+ *          required: true
+ *          description: El id del producto
+ *      responses:
+ *          200:
+ *              description: todos los productos
+ *              content: 
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          $ref: '#/components/schemas/producto'
+ *          404:
+ *              description: producto no encontrado
+ */
+
 router.get("/producto/:id", (req,res) => {
-    const {id} = req.params;
-    productomodel.findById(id)
+    const { id } = req.params;
+    productomodel
         .then((data) => res.json(data))
         .catch((error) => res.json({mensaje:error}))    
 });
 
-//
+//subir archivo
 router.post("/producto", (req, res) => {
     const producto = productomodel(req.body);
     producto.save()
@@ -53,7 +101,7 @@ router.post("/producto", (req, res) => {
         .catch((error) => res.json({mensaje:error}))    
 });
 
-//
+//modificar archivo
 router.put("/producto/:id", (req, res) => {
     const {id} = req.params;
     const {juego, precio, plataforma, genero, stock} = req.body
